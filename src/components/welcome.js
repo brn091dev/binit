@@ -1,14 +1,12 @@
 import React from 'react'
 
-function Welcome(props){
-    return(
+const Welcome = ({username}) =>(
         <div>
             <div>
-    <h1>Hello {props.username}</h1>
-    <p>Lest work happy</p>
+                <h1>Hello {username}</h1>
+                <p>Lest work happy</p>
             </div>
         </div>
-    )
-}
+)
 
 export default Welcome

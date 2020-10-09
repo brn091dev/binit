@@ -1,16 +1,18 @@
 import React from 'react'
-import { BrowserRouter, Route} from 'react-router-dom'
+import { BrowserRouter, Route, Router, Switch} from 'react-router-dom'
 
 import Exercises from '../pages/Exercises'
 import Landing   from '../pages/Landing'
+import NotFound   from '../pages/NotFound'
 
-function App(){
-    return (
+const App = () =>(
         <BrowserRouter>
-            <Route path="/exercise" component={<Exercises/>}/>
-            <Route path="/landing" component={<Landing/>}/>
+            <Switch>
+                <Route exact path="/exercises" component={Exercises}/>
+                <Route exact path="/landing"  component={Landing}/>
+                <Route component={NotFound}/>
+            </Switch>        
         </BrowserRouter>
-    )
-}
+)
 
 export default App

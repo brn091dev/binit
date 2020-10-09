@@ -2,6 +2,7 @@ import React from 'react'
 
 import Card from '../components/Card'
 import Welcome from '../components/welcome'
+import AddButton from '../components/AddButton'
 
 class Exercises extends React.Component{
     render(){
@@ -17,6 +18,8 @@ class Exercises extends React.Component{
                 leftColor=""
                 rightColor=""
             />
+
+            <AddButton/>
             </div>
         )
     }
