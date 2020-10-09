@@ -36,18 +36,19 @@ class LandingForm extends React.Component{
                 <form
                     onSubmit={this.handleSubmit}
                 >
-                    <div className="dropdown">           
-                        <select>{
-                            this.state.values.map((obj) => {
-                                return <option value={obj.id}>{obj.descripcion}</option>
-                            })
-                        }</select>
-                    </div>
+                        <div className="form-group">
+                        <label class="control-label col-sm-offset-2 col-sm-2" for="ti"></label>                                   
+                                <select id="ti" className="form-control">{
+                                    this.state.values.map((obj) => {
+                                        return <option value={obj.id}>{obj.descripcion}</option>
+                                    })
+                                }</select>
+                        </div>
                     <div className="form-group">
                         <input 
                             type="text" 
                             className="form-control" 
-                            placeholder="Identificacion" 
+                            placeholder="Número de identificacion" 
                             name="identificacion"
                             onChange={onChange}
                             value={form.title}
@@ -128,7 +129,7 @@ class LandingForm extends React.Component{
                     
                     <button 
                         type="submit" 
-                        className="btn btn-primary float-right"
+                        className="btn btn-outline-primary "
                     >
                         Submit
                     </button>

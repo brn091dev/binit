@@ -8,12 +8,4 @@ const AddButton = () => (
         </Link>
 )
 
-// function AddButton(props){
-//     return (
-        // <Link to="/landing">
-        //     <button>Landing</button>
-        // </Link>
-//     )
-// }
-
 export default AddButton

@@ -34,13 +34,13 @@ class Landing extends React.Component{
         return(
             <div className="row" style={{margin: 2 + 'em'}} >
                 <div className="col-sm">
+                    <img src={imgLeft} height="300 %"/>                    
+                </div>
+                <div className="col-sm">
                     <LandingForm
                         onChange = {this.handleChange}
                         form={this.state.form}
                     />
-                </div>
-                <div className="col-sm">
-                    <img src={imgLeft} height="300 %"/>                    
                 </div>
             </div>
         )
