@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 
 import {
-  Container,
-  Card,
-  CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
+  Container
 } from 'reactstrap';
 
 import TableContainer from '../components/TableContainer';
@@ -14,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { SelectColumnFilter } from '../components/filters';
 import { CSVLink } from "react-csv";
 import ExportExcel from 'react-export-excel';
+
+import {getToken} from '../components/welcome'
 
 const ExcelFile = ExportExcel.ExcelFile
 const ExcelSheet = ExportExcel.ExcelSheet
@@ -26,7 +23,16 @@ const Admin = () => {
 
   useEffect(() => {
     const doFetch = async () => {
-      const response = await fetch('http://localhost:8000/api/exercises');
+      var tokk = await getToken()
+      let config ={
+        method: 'GET',
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json',
+            'apikey':tokk
+        },
+      }
+      const response = await fetch('http://localhost:8000/api/exercises',config);
       const body = await response.json();
       //const contacts = body.results;
       console.log(body);
@@ -65,7 +71,7 @@ const Admin = () => {
         accessor: 'fecha_ingreso',
       },
     ],
-    //[]
+    []
   );
 
   return (

@@ -1,12 +1,17 @@
 import React from 'react'
 
-const Welcome = ({username}) =>(
-        <div>
-            <div>
-                <h1>Hello {username}</h1>
-                <p>Lest work happy</p>
-            </div>
-        </div>
-)
+export async function getToken() {
+    let configt ={
+    method: 'POST',
+    headers:{
+        'Accept':'application/json',
+        'Content-Type':'application/json',
+    },
+    }
+    let rest = await fetch('http://localhost:8000/api/autenticar',configt)
+    let datat = await rest.json()
+    //console.log(datat.token)
 
-export default Welcome
+    return datat.token
+}
+

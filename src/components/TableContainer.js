@@ -16,7 +16,6 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
     headerGroups,
     page,
     prepareRow,
-    visibleColumns,
     canPreviousPage,
     canNextPage,
     pageOptions,
