@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { SelectColumnFilter } from '../components/filters';
 import { CSVLink } from "react-csv";
 import ExportExcel from 'react-export-excel';
+import AppButton from '../components/AddButton'
 
 import {getToken} from '../components/welcome'
 
@@ -77,7 +78,11 @@ const Admin = () => {
   return (
     
     <Container style={{ marginTop: 100,maxWidth:1245 }}>
-      <div className="float-right">   
+      <div className="float-right">  
+      <AppButton
+        nav="/landing"
+        name="¡Registrate con nosotros!"
+      /> 
 
       <CSVLink data = {data} className="btn btn-outline-success" style={{margin:10}}>Exportar CSV</CSVLink>
 

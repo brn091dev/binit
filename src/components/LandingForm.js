@@ -13,8 +13,8 @@ class LandingForm extends React.Component{
     async componentDidMount(){
         await this.fetchTiposIdentificaciones()
 
-        ValidatorForm.addValidationRule("isValidName",(string)=>/[a-zA-Z \u00E0-\u00FC]{1,20}/g.test(string));
-        ValidatorForm.addValidationRule("idValidEmail",(string)=>/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(string));
+        // ValidatorForm.addValidationRule("isValidName",(string)=>/[a-zA-Z \u00E0-\u00FC]{1,20}/g.test(string));
+        // ValidatorForm.addValidationRule("idValidEmail",(string)=>/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(string));
         //ValidatorForm.addValidationRule("idNumeric",(string)=>/^[0-9]/g.test(string));
     }
 
@@ -31,8 +31,6 @@ class LandingForm extends React.Component{
         }
         let res = await fetch('http://localhost:8000/api/identificaciones',config)
         let data = await res.json()
-        console.log('tokensito')
-        console.log(res)
 
         this.setState({
             values:data            
@@ -84,8 +82,8 @@ class LandingForm extends React.Component{
                             name="identificacion"
                             onChange={onChange}
                             value={form.title}
-                            validators = {["required"]}
-                            errorMessages= {["Campo requerido"]}
+                            // validators = {["required"]}
+                            // errorMessages= {["Campo requerido"]}
                         />
                         {/* {errors.identificacion.length > 0 && 
                             <span >{errors.identificacion}</span>} */}
@@ -98,8 +96,8 @@ class LandingForm extends React.Component{
                             name="nombres"
                             onChange={onChange}
                             value={form.nombres}
-                            validators = {["required","isValidName"]}
-                            errorMessages= {["Campo requerido","Debe ser alfanumerico"]}
+                            validators = {["required"]}
+                            errorMessages= {["Campo requerido"]}
                             />
                         {/* {errors.nombres.length > 0 && 
                             <span >{errors.nombres}</span>} */}
@@ -126,8 +124,8 @@ class LandingForm extends React.Component{
                             name="email"
                             onChange={onChange}
                             value={form.email}
-                            validators = {["required","isValidEmail"]}
-                            errorMessages= {["Campo requerido","Formato no valido"]}
+                            validators = {["required"]}
+                            errorMessages= {["Campo requerido"]}
                         />
                         {/* {errors.email.length > 0 && 
                                 <span >{errors.email}</span>} */}
@@ -135,6 +133,7 @@ class LandingForm extends React.Component{
                     <button 
                         type="submit" 
                         className="btn btn-outline-primary"
+                        onClick={form.handleSumbit}
                     >
                         Registrar
                     </button>

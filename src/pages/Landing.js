@@ -2,15 +2,19 @@ import React from 'react'
 
 import LandingForm from '../components/LandingForm'
 import {getToken} from '../components/welcome'
-import imgLeft from '../images/lp1.png'
+import imgBanner from '../images/admind3.jpg'
+import imgLogo from '../images/mheat.png'
 
-const regex = new RegExp("^[a-zA-Z ]+$");
+import Modal from 'react-awesome-modal';
+import { Button } from '@material-ui/core'
+import AddButton from '../components/AddButton'
 
 class Landing extends React.Component{
     
     constructor(props) {
         super(props);
         this.state = {
+            visible:false,
             form:{
                 id_tipo_identificacion:'',
                 identificacion:'',
@@ -30,6 +34,18 @@ class Landing extends React.Component{
         };
     }
 
+    openModal() {
+        this.setState({
+            visible : true
+        });
+    }
+ 
+    closeModal() {
+        this.setState({
+            visible : false
+        });
+    }
+
     handleChange = e => {
         this.setState({
             form:{
@@ -37,6 +53,7 @@ class Landing extends React.Component{
                 [e.target.name]:e.target.value
             },
         })
+        
         console.log(this.state.form)
 
         // const { name, value } = e.target;
@@ -78,6 +95,7 @@ class Landing extends React.Component{
     }
 
     handleSubmit = async e => {
+        console.log('aqui')
         var tokk = await getToken()
         e.preventDefault()
         try {
@@ -92,6 +110,9 @@ class Landing extends React.Component{
             }
             let res = await fetch('http://localhost:8000/api/iperson',config)
             let json = await res.json()
+            if(res.status===200){
+                this.openModal()
+            }
         } catch (error) {
             
         }
@@ -99,16 +120,34 @@ class Landing extends React.Component{
 
     render(){
         return(
-            <div className="row" style={{margin: 2 + 'em'}} >
-                <div className="col-sm">
-                    <img src={imgLeft} height="300 %" alt="ok"/>                    
+            <div>
+                <div style={{height:"150px"}}>
+                    <img src={imgBanner} width="100%" height="100%"/>
                 </div>
-                <div className="col-sm">
-                    <LandingForm
-                        onChange = {this.handleChange}
-                        onSubmit = {this.handleSubmit}
-                        form={this.state.form}
-                    />
+                <div className="row" style={{margin: 2 + 'em'}} >
+                    <div className="col-sm d-flex justify-content-center">
+                        <img src={imgLogo} height="50%" alt="ok"/>                    
+                    </div>
+                    <div className="col-sm">
+                        <LandingForm
+                            onChange = {this.handleChange}
+                            onSubmit = {this.handleSubmit}
+                            form={this.state.form}
+                            />
+                    </div>
+                </div>
+                <div>
+                <Modal visible={this.state.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => this.closeModal()}>
+                    <div>
+                        <h1>!Usuario registrado!</h1>
+                        <p>Gracias por todo</p>
+                        <Button onClick={() => this.closeModal()}>Cerrar</Button>
+                        <AddButton 
+                            nav="/"
+                            name="Lista de usuarios registrados"
+                        />
+                    </div>
+                </Modal>
                 </div>
             </div>
         )
