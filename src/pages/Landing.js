@@ -4,9 +4,6 @@ import LandingForm from '../components/LandingForm'
 import {getToken} from '../components/welcome'
 import imgLeft from '../images/lp1.png'
 
-const validEmailRegex = 
-  RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
-
 const regex = new RegExp("^[a-zA-Z ]+$");
 
 class Landing extends React.Component{
@@ -42,48 +39,42 @@ class Landing extends React.Component{
         })
         console.log(this.state.form)
 
-        const { name, value } = e.target;
-        let errors = this.state.form.errors;
+        // const { name, value } = e.target;
+        // let errors = this.state.form.errors;
     
-        switch (name) {
-            case 'id_tipo_identificacion': 
-            errors.id_tipo_identificacion = 
-            value === 0
-                ? 'Debe seleccionar un tipo identificacion'
-                : '';                
-            break;
-        case 'identificacion': 
-            errors.identificacion = 
-                regex.test(value)
-                ? 'Por favor ingrese numeros'
-                : '';                
-            break;
-        case 'nombres': 
-            errors.nombres = 
-            !regex.test(value)
-                ? 'Solo letras'
-                : '';
-            break;   
-        case 'apellidos': 
-            errors.nombres = 
-            !regex.test(value)
-                ? 'Solo letras'
-                : '';
-            break;   
-        case 'email': 
-            errors.email = 
-            validEmailRegex.test(value)
-                ? ''
-                : 'No es un correo valido';
-            break;            
-        default:
-            break;
-        }
+        // switch (name) {           
+        // case 'identificacion': 
+        //     errors.identificacion = 
+        //         regex.test(value)
+        //         ? 'Por favor ingrese numeros'
+        //         : '';                
+        //     break;
+        // case 'nombres': 
+        //     errors.nombres = 
+        //     !regex.test(value)
+        //         ? 'Solo letras'
+        //         : '';
+        //     break;   
+        // case 'apellidos': 
+        //     errors.nombres = 
+        //     !regex.test(value)
+        //         ? 'Solo letras'
+        //         : '';
+        //     break;   
+        // case 'email': 
+        //     errors.email = 
+        //     validEmailRegex.test(value)
+        //         ? ''
+        //         : 'No es un correo valido';
+        //     break;            
+        // default:
+        //     break;
+        // }
     
-        this.setState({errors, [name]: value}, ()=> {
-            // console.log('errors')
-            // console.log(errors)
-        })
+        // this.setState({errors, [name]: value}, ()=> {
+        //     // console.log('errors')
+        //     // console.log(errors)
+        // })
     }
 
     handleSubmit = async e => {

@@ -76,7 +76,7 @@ const Admin = () => {
 
   return (
     
-    <Container style={{ marginTop: 100 }}>
+    <Container style={{ marginTop: 100,maxWidth:1245 }}>
       <div className="float-right">   
 
       <CSVLink data = {data} className="btn btn-outline-success" style={{margin:10}}>Exportar CSV</CSVLink>

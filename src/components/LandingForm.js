@@ -1,5 +1,8 @@
 import React from 'react'
 import {getToken} from './welcome'
+import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator'
+import InputLabel from '@material-ui/core/InputLabel';
+
 
 class LandingForm extends React.Component{
 
@@ -9,6 +12,10 @@ class LandingForm extends React.Component{
 
     async componentDidMount(){
         await this.fetchTiposIdentificaciones()
+
+        ValidatorForm.addValidationRule("isValidName",(string)=>/[a-zA-Z \u00E0-\u00FC]{1,20}/g.test(string));
+        ValidatorForm.addValidationRule("idValidEmail",(string)=>/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(string));
+        //ValidatorForm.addValidationRule("idNumeric",(string)=>/^[0-9]/g.test(string));
     }
 
     fetchTiposIdentificaciones = async () =>{
@@ -21,7 +28,6 @@ class LandingForm extends React.Component{
                 'Content-Type':'application/json',
                 'apikey':tokk
             },
-            body:JSON.stringify(this.state.form)
         }
         let res = await fetch('http://localhost:8000/api/identificaciones',config)
         let data = await res.json()
@@ -37,78 +43,94 @@ class LandingForm extends React.Component{
     render(){
        
         const { onChange, onSubmit, form } = this.props
-        
+
         var f = new Date();
         var actualDate = f.getFullYear() +"-" + (f.getMonth() +1) + "-" + f.getDate() + " " + f.getHours()+":" + f.getMinutes()+":" + f.getSeconds();
 
         form.fecha_ingreso = actualDate
-        const {errors} = form
+        //const {errors} = form
         return (
             <div className="container">
-                <form
+                <ValidatorForm
                     onSubmit={onSubmit}
                 >                   
                     <div className="form-group">
-                    <label className="control-label col-sm-offset-2 col-sm-2" htmlFor="ti"></label>                                   
-                        <select id="ti" className="form-control" name="id_tipo_identificacion" onChange={onChange} value={form.id_tipo_identificacion}>                            
-                            <option key="0" value="0">SELECCIONE TIPO DE IDENTIFICACIÓN</option>
+                    <InputLabel className="control-label col-sm-offset-2 col-sm-2" htmlFor="ti"></InputLabel>                                   
+                        <SelectValidator 
+                            labelId="ti"
+                            id="tia" 
+                            className="form-control" 
+                            name="id_tipo_identificacion" 
+                            onChange={onChange} 
+                            value={form.id_tipo_identificacion}
+                            validators={["required"]}
+                            errorMessages={["Seleccione tipo de documento"]}
+                            >                            
+                            {/* <option key="0" value="0">SELECCIONE TIPO DE IDENTIFICACIÓN</option> */}
                             {                            
                                 this.state.values.map((obj) => {
                                     return <option key={obj.id} value={obj.id_tipo_identificacion}>{obj.descripcion}</option>
                                 })
                             }
-                        </select>
-                        {errors.id_tipo_identificacion.length > 0 && 
-                            <span >{errors.id_tipo_identificacion}</span>}
+                        </SelectValidator>
+                        {/* {errors.id_tipo_identificacion.length > 0 && 
+                            <span >{errors.id_tipo_identificacion}</span>} */}
                     </div> 
                     <div className="form-group">
-                        <input 
+                        <TextValidator 
                             type="text" 
                             className="form-control" 
                             placeholder="Número de identificacion" 
                             name="identificacion"
                             onChange={onChange}
                             value={form.title}
+                            validators = {["required"]}
+                            errorMessages= {["Campo requerido"]}
                         />
-                        {errors.identificacion.length > 0 && 
-                            <span >{errors.identificacion}</span>}
+                        {/* {errors.identificacion.length > 0 && 
+                            <span >{errors.identificacion}</span>} */}
                     </div>
                      <div className="form-group">
-                        <input 
+                        <TextValidator 
                             type="text" 
                             className="form-control" 
                             placeholder="Nombres" 
                             name="nombres"
                             onChange={onChange}
                             value={form.nombres}
-                            noValidate
+                            validators = {["required","isValidName"]}
+                            errorMessages= {["Campo requerido","Debe ser alfanumerico"]}
                             />
-                        {errors.nombres.length > 0 && 
-                            <span >{errors.nombres}</span>}
+                        {/* {errors.nombres.length > 0 && 
+                            <span >{errors.nombres}</span>} */}
                     </div>
                     <div className="form-group">
-                        <input 
+                        <TextValidator 
                             type="text" 
                             className="form-control" 
                             placeholder="Apellidos" 
                             name="apellidos"
                             onChange={onChange}
                             value={form.apellidos}
+                            validators = {["required"]}
+                            errorMessages= {["Campo requerido"]}
                         />
-                        {errors.apellidos.length > 0 && 
-                                <span >{errors.apellidos}</span>}
+                        {/* {errors.apellidos.length > 0 && 
+                                <span >{errors.apellidos}</span>} */}
                     </div>
                     <div className="form-group">
-                        <input 
+                        <TextValidator 
                             type="email" 
                             className="form-control" 
                             placeholder="Email" 
                             name="email"
                             onChange={onChange}
                             value={form.email}
+                            validators = {["required","isValidEmail"]}
+                            errorMessages= {["Campo requerido","Formato no valido"]}
                         />
-                        {errors.email.length > 0 && 
-                                <span >{errors.email}</span>}
+                        {/* {errors.email.length > 0 && 
+                                <span >{errors.email}</span>} */}
                     </div>
                     <button 
                         type="submit" 
@@ -116,7 +138,7 @@ class LandingForm extends React.Component{
                     >
                         Registrar
                     </button>
-                </form>
+                </ValidatorForm>
             </div>
         )
     }
