@@ -122,7 +122,7 @@ class LandingForm extends React.Component{
         try {
             var res = await postPersona(tokk,this.state.form)
             if(res.status===200){
-                
+                this.openModal()
             }
         } catch (error) {
             
@@ -184,7 +184,7 @@ class LandingForm extends React.Component{
                             errorMessages= {["Campo requerido"]}
                         />
                         {this.state.form.errors.identificacion.length > 0 && 
-                            <span >{this.state.form.errors.identificacion}</span>}
+                            <span style={{color:'red',fontSize:12}}>{this.state.form.errors.identificacion}</span>}
                     </div>
                      <div className="form-group">
                         <TextValidator 
@@ -198,7 +198,7 @@ class LandingForm extends React.Component{
                             errorMessages= {["Campo requerido"]}
                             />
                         {this.state.form.errors.nombres.length > 0 && 
-                            <span >{this.state.form.errors.nombres}</span>}
+                            <span style={{color:'red',fontSize:12}}>{this.state.form.errors.nombres}</span>}
                     </div>
                     <div className="form-group">
                         <TextValidator 
@@ -212,7 +212,7 @@ class LandingForm extends React.Component{
                             errorMessages= {["Campo requerido"]}
                         />
                         {this.state.form.errors.apellidos.length > 0 && 
-                                <span >{this.state.form.errors.apellidos}</span>}
+                                <span style={{color:'red',fontSize:12}}>{this.state.form.errors.apellidos}</span>}
                     </div>
                     <div className="form-group">
                         <TextValidator 
@@ -226,7 +226,7 @@ class LandingForm extends React.Component{
                             errorMessages= {["Campo requerido"]}
                         />
                         {this.state.form.errors.email.length > 0 && 
-                                <span >{this.state.form.errors.email}</span>}
+                                <span style={{color:'red',fontSize:12}}>{this.state.form.errors.email}</span>}
                     </div>
                     <button 
                         type="submit" 
@@ -237,18 +237,18 @@ class LandingForm extends React.Component{
                     </button>
                 </ValidatorForm>
 
-
                 <div>
-                <button onClick={() => this.openModal()}>hola</button>
-                <Modal visible={this.state.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => this.closeModal()}>
-                    <div>
-                        <h1>!Usuario registrado!</h1>
-                        <p>Gracias por todo</p>
+                {/* <button onClick={() => this.openModal()}>hola</button> */}
+                <Modal className="mymodal" visible={this.state.visible} width="400" height="200" effect="fadeInUp" onClickAway={() => this.closeModal()}>
+                    <div style={{margin:20,textAlign:'center'}}>
+                        <h1 style={{color:'green',fontSize:40,textAlign:'center'}}>!Usuario registrado!</h1>
+                        <br/>
+                        <p>Gracias por registrarse con nosotros</p>
                         <Button onClick={() => this.closeModal()}>Cerrar</Button>
-                        <AddButton 
+                        {/* <AddButton 
                             nav="/"
                             name="Lista de usuarios registrados"
-                        />
+                        /> */}
                     </div>
                 </Modal>
                 </div>
