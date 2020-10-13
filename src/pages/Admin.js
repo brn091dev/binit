@@ -10,7 +10,7 @@ import { SelectColumnFilter } from '../components/filters';
 import { CSVLink } from "react-csv";
 import ExportExcel from 'react-export-excel';
 import AppButton from '../components/AddButton'
-
+import imgBanner from '../images/admind3.jpg'
 import {getToken} from '../components/welcome'
 
 const ExcelFile = ExportExcel.ExcelFile
@@ -22,6 +22,7 @@ const Admin = () => {
   //consumo de datos por mapa
   const [data, setData] = useState([]);
 
+  //It must be in other component but I haven't sleep
   useEffect(() => {
     const doFetch = async () => {
       var tokk = await getToken()
@@ -76,33 +77,40 @@ const Admin = () => {
   );
 
   return (
-    
-    <Container style={{ marginTop: 100,maxWidth:1245 }}>
-      <div className="float-right">  
-      <AppButton
-        nav="/landing"
-        name="¡Registrate con nosotros!"
-      /> 
-
-      <CSVLink data = {data} className="btn btn-outline-success" style={{margin:10}}>Exportar CSV</CSVLink>
-
-      <ExcelFile element = {<button className="btn btn-outline-success" style={{margin:10}}>Exportar Excel</button>} filename="nombreArchivo">
-        <ExcelSheet data={data} name="Personas">
-          <ExcelColumn label="Tipo identificacion" value="tipo_identificacion"/>
-          <ExcelColumn label="Número identificacion" value="identificacion"/>
-          <ExcelColumn label="Nombres" value="nombres"/>
-          <ExcelColumn label="Apellidos" value="apellidos"/>
-          <ExcelColumn label="Email" value="email"/>
-          <ExcelColumn label="Fecha registro" value="fecha_ingreso"/>
-        </ExcelSheet>
-      </ExcelFile>
+    <div>
+               
+      <div style={{height:"150px"}}>
+          <img src={imgBanner} width="100%" height="100%" alt="logo"/>
       </div>
+      
+      <Container style={{ marginTop: 10,maxWidth:1245 }}>
+        <div className="float-right">  
+        <AppButton
+          nav="/landing"
+          name="¡Ir a landing!"
+        /> 
 
-      <TableContainer
-        columns={columns}
-        data={data}
-      />
-    </Container>
+        <CSVLink data = {data} filename="csvperonasregistradas" className="btn btn-outline-success" style={{margin:10}}>Exportar CSV</CSVLink>
+
+        <ExcelFile element = {<button className="btn btn-outline-success" style={{margin:10}}>Exportar Excel</button>} filename="excelpersonasregistradas">
+          <ExcelSheet data={data} name="Personas">
+            <ExcelColumn label="Tipo identificacion" value="tipo_identificacion"/>
+            <ExcelColumn label="Número identificacion" value="identificacion"/>
+            <ExcelColumn label="Nombres" value="nombres"/>
+            <ExcelColumn label="Apellidos" value="apellidos"/>
+            <ExcelColumn label="Email" value="email"/>
+            <ExcelColumn label="Fecha registro" value="fecha_ingreso"/>
+          </ExcelSheet>
+        </ExcelFile>
+        </div>
+
+        <TableContainer
+          columns={columns}
+          data={data}
+        />
+      </Container>
+
+    </div>
   );
 };
 

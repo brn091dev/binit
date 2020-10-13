@@ -1,73 +1,171 @@
 import React from 'react'
-import {getToken} from './welcome'
+import {getToken, getTiposIdentificaciones, postPersona} from './welcome'
 import {ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator'
 import InputLabel from '@material-ui/core/InputLabel';
+import "../styles/modal.css";
 
+import Modal from 'react-awesome-modal';
+import { Button } from '@material-ui/core'
+import AddButton from '../components/AddButton'
+
+const validEmailRegex = 
+  RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+
+const validIdentification = 
+  RegExp('^[0-9]+$');
 
 class LandingForm extends React.Component{
 
-    state = {
-        values: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            visible:false,
+            form:{
+                id_tipo_identificacion:'',
+                identificacion:'',
+                nombres:'', 
+                apellidos:'',
+                email:'',
+                fecha_ingreso:'',
+                errors: {
+                    id_tipo_identificacion:'',
+                    identificacion:'',
+                    nombres: '',
+                    apellidos:'',
+                    email: '',
+                    fecha_ingreso:'',
+                }
+            } ,
+            values: []         
+        };
+        
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-
+    
     async componentDidMount(){
         await this.fetchTiposIdentificaciones()
-
-        // ValidatorForm.addValidationRule("isValidName",(string)=>/[a-zA-Z \u00E0-\u00FC]{1,20}/g.test(string));
-        // ValidatorForm.addValidationRule("idValidEmail",(string)=>/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(string));
+        //ValidatorForm.addValidationRule("isValidName",(string)=>/[a-zA-Z \u00E0-\u00FC]{1,20}/g.test(string));
+        //ValidatorForm.addValidationRule("idValidEmail",(string)=>/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(string));
         //ValidatorForm.addValidationRule("idNumeric",(string)=>/^[0-9]/g.test(string));
     }
 
     fetchTiposIdentificaciones = async () =>{
-        var tokk = await getToken()
-        
-        let config ={
-            method: 'GET',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-                'apikey':tokk
-            },
-        }
-        let res = await fetch('http://localhost:8000/api/identificaciones',config)
-        let data = await res.json()
+        var tokk = await getToken()    
+        var data = await getTiposIdentificaciones(tokk)
 
         this.setState({
+            ...this.visible,
+            ...this.state.form,
             values:data            
+        })        
+    }
+    
+    handleChange = e => {
+        this.setState({
+            form:{
+                ...this.visible,
+                ...this.state.values,
+                ...this.state.form,
+                [e.target.name]:e.target.value
+            },
         })
-        
+
+        const { name, value } = e.target;
+        let errors = this.state.form.errors;
+    
+        switch (name) {      
+        case 'identificacion': 
+        this.state.form.errors.identificacion = 
+                !validIdentification.test(value)
+                ? 'Debe ser numerico'
+                : '';                
+            break;
+        case 'nombres': 
+        this.state.form.errors.nombres = 
+            validIdentification.test(value)
+            ? 'Solo letras'
+            : '';  
+        case 'apellidos': 
+        this.state.form.errors.apellidos = 
+            validIdentification.test(value)
+            ? 'Solo letras'
+            : ''; 
+        case 'email': 
+        this.state.form.errors.email = 
+            validEmailRegex.test(value)
+            ? ''
+            : 'Correo no valido';
+            break;           
+        default:
+            break;
+        }
     }
 
-    render(){
-       
-        const { onChange, onSubmit, form } = this.props
-
+    handleSubmit = async e => {
         var f = new Date();
         var actualDate = f.getFullYear() +"-" + (f.getMonth() +1) + "-" + f.getDate() + " " + f.getHours()+":" + f.getMinutes()+":" + f.getSeconds();
 
-        form.fecha_ingreso = actualDate
-        //const {errors} = form
+        this.state.form.fecha_ingreso = actualDate
+
+        this.setState({
+            form:{
+                ...this.state.visible,
+                ...this.state.values,
+                ...this.state.form,
+                [e.target.name]:e.target.value
+            },
+        })
+
+        var tokk = await getToken()
+        e.preventDefault()
+        try {
+            var res = await postPersona(tokk,this.state.form)
+            if(res.status===200){
+                
+            }
+        } catch (error) {
+            
+        }
+    }
+    
+    openModal() {
+        this.setState({
+            visible : true
+        });
+    }
+ 
+    closeModal() {
+        this.setState({
+            visible : false
+        });
+    }
+
+    render(){
+               
+        const {errors} = this.state.form.errors
+
         return (
             <div className="container">
                 <ValidatorForm
-                    onSubmit={onSubmit}
+                    onSubmit={this.handleSubmit}
                 >                   
                     <div className="form-group">
                     <InputLabel className="control-label col-sm-offset-2 col-sm-2" htmlFor="ti"></InputLabel>                                   
                         <SelectValidator 
-                            labelId="ti"
-                            id="tia" 
+                            id="ti" 
+                            defaultValue="0"
                             className="form-control" 
                             name="id_tipo_identificacion" 
-                            onChange={onChange} 
-                            value={form.id_tipo_identificacion}
-                            validators={["required"]}
-                            errorMessages={["Seleccione tipo de documento"]}
+                            onChange={this.handleChange} 
+                            value={this.state.id_tipo_identificacion}
+                            // validators={["required"]}
+                            // errorMessages={["Seleccione tipo de documento"]}
                             >                            
-                            {/* <option key="0" value="0">SELECCIONE TIPO DE IDENTIFICACIÓN</option> */}
+                            <option selected key="0" value="0">SELECCIONE TIPO DE IDENTIFICACIÓN</option>
                             {                            
                                 this.state.values.map((obj) => {
-                                    return <option key={obj.id} value={obj.id_tipo_identificacion}>{obj.descripcion}</option>
+                                    return <option key={obj.id_tipo_identificacion} value={obj.id_tipo_identificacion}>{obj.descripcion}</option>
                                 })
                             }
                         </SelectValidator>
@@ -80,13 +178,13 @@ class LandingForm extends React.Component{
                             className="form-control" 
                             placeholder="Número de identificacion" 
                             name="identificacion"
-                            onChange={onChange}
-                            value={form.title}
-                            // validators = {["required"]}
-                            // errorMessages= {["Campo requerido"]}
+                            onChange={this.handleChange}
+                            value={this.state.form.identificacion}
+                            validators = {["required"]}
+                            errorMessages= {["Campo requerido"]}
                         />
-                        {/* {errors.identificacion.length > 0 && 
-                            <span >{errors.identificacion}</span>} */}
+                        {this.state.form.errors.identificacion.length > 0 && 
+                            <span >{this.state.form.errors.identificacion}</span>}
                     </div>
                      <div className="form-group">
                         <TextValidator 
@@ -94,13 +192,13 @@ class LandingForm extends React.Component{
                             className="form-control" 
                             placeholder="Nombres" 
                             name="nombres"
-                            onChange={onChange}
-                            value={form.nombres}
+                            onChange={this.handleChange}
+                            value={this.state.form.nombres}
                             validators = {["required"]}
                             errorMessages= {["Campo requerido"]}
                             />
-                        {/* {errors.nombres.length > 0 && 
-                            <span >{errors.nombres}</span>} */}
+                        {this.state.form.errors.nombres.length > 0 && 
+                            <span >{this.state.form.errors.nombres}</span>}
                     </div>
                     <div className="form-group">
                         <TextValidator 
@@ -108,13 +206,13 @@ class LandingForm extends React.Component{
                             className="form-control" 
                             placeholder="Apellidos" 
                             name="apellidos"
-                            onChange={onChange}
-                            value={form.apellidos}
+                            onChange={this.handleChange}
+                            value={this.state.form.apellidos}
                             validators = {["required"]}
                             errorMessages= {["Campo requerido"]}
                         />
-                        {/* {errors.apellidos.length > 0 && 
-                                <span >{errors.apellidos}</span>} */}
+                        {this.state.form.errors.apellidos.length > 0 && 
+                                <span >{this.state.form.errors.apellidos}</span>}
                     </div>
                     <div className="form-group">
                         <TextValidator 
@@ -122,22 +220,39 @@ class LandingForm extends React.Component{
                             className="form-control" 
                             placeholder="Email" 
                             name="email"
-                            onChange={onChange}
-                            value={form.email}
+                            onChange={this.handleChange}
+                            value={this.state.form.email}
                             validators = {["required"]}
                             errorMessages= {["Campo requerido"]}
                         />
-                        {/* {errors.email.length > 0 && 
-                                <span >{errors.email}</span>} */}
+                        {this.state.form.errors.email.length > 0 && 
+                                <span >{this.state.form.errors.email}</span>}
                     </div>
                     <button 
                         type="submit" 
                         className="btn btn-outline-primary"
-                        onClick={form.handleSumbit}
+                        // onClick={this.handleSumbit}
                     >
                         Registrar
                     </button>
                 </ValidatorForm>
+
+
+                <div>
+                <button onClick={() => this.openModal()}>hola</button>
+                <Modal visible={this.state.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => this.closeModal()}>
+                    <div>
+                        <h1>!Usuario registrado!</h1>
+                        <p>Gracias por todo</p>
+                        <Button onClick={() => this.closeModal()}>Cerrar</Button>
+                        <AddButton 
+                            nav="/"
+                            name="Lista de usuarios registrados"
+                        />
+                    </div>
+                </Modal>
+                </div>
+
             </div>
         )
     }
